@@ -1,5 +1,6 @@
 /* eslint-disable no-prototype-builtins */
 import { type ClassValue, clsx } from "clsx";
+import { SocketAddress } from "net";
 import qs from "query-string";
 import { twMerge } from "tailwind-merge";
 import { z } from "zod";
@@ -196,7 +197,18 @@ export const getTransactionStatus = (date: Date) => {
   return date > twoDaysAgo ? "Processing" : "Success";
 };
 
-export const authFormSchema = z.object({
+export const authFormSchema = (type) => z.object({
+  //sign up
+  firstName: type === 'sign-in' ? z.string().optional() : z.string().min(2),
+  lastName: type === 'sign-in' ? z.string().optional() : z.string().min(2),
+  address1: type === 'sign-in' ? z.string().optional() : z.string().max(50),
+  city: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  province: type === 'sign-in' ? z.string().optional() : z.string().min(14),
+  postalCode: type === 'sign-in' ? z.string().optional() : z.string().min(4).max(4),
+  dateOfBirth: type === 'sign-in' ? z.string().optional() : z.string().min(3),
+  sarsTaxNumber: type === 'sign-in' ? z.string().optional() : z.string().max(13),
+  cellphoneNumber: type === 'sign-in' ? z.string().optional() : z.string().min(10).max(12),
+  //both
   email: z.string().email(),
   password: z.string().min(8),
 })
